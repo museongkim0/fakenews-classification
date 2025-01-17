@@ -155,3 +155,150 @@ csv : 해당 기사의 진위여부 데이터
   
 </p>
 </details>
+
+<details><summary> <b> 수치형 변수 선택 </b> </summary>
+<p>
+	
+- 수치형 변수 분포 비교
+<div style="text-align: center;">
+  <img src="./images/수치형변수분포.png" /> <br>
+</div>
+→ in_out_degree, clustering_coef 변수가 가설과 달리 Fake일 때 더 높은 값의 분포를 가짐
+
+
+- 수치형 변수 t 검정, 범주형 변수 Chi2 검정
+<div style="text-align: center;">
+  <img src="./images/tf검정.png" /> <br>
+</div>
+→ 신뢰구간 90%일 때 -> in_out_degree 채택 / 신뢰구간 95%일 때 -> text_len, in_out_degree 채택
+
+→ 분석 목적에 맞지 않는 in_out_degree, clustering_coef 변수 제거
+
+- 최종 데이터셋에 포함될 수치형 변수 결정
+<div style="text-align: center;">
+  <img src="./images/최종데이터셋.png" /> <br>
+</div>
+
+ <br>
+  
+</p>
+</details>
+
+## 3.데이터 분석
+<details><summary> <b> 머신러닝 </b> </summary>
+<p>
+	
+- 데이터 스케일링
+<div style="text-align: center;">
+  <img src="./images/minmaxscaler.png" /> <br>
+</div>
+→ 범주형 변수 contain_movies 를 유지하기 위해 minmaxscaler 사용<br>
+<br>
+
+- 모델 선택 및 분석
+ <br>
+<div style="text-align: center;">
+  <img src="./images/ml분석결과.png" /> <br>
+</div>
+→ 로지스틱 회귀, 랜덤포레스트. MLP모델을 이용하여 분석 진행<br>
+→ 다중공선성의 문제를 방지하기 위해 로지스틱 모델은 L2 규제를 통해 릿지회귀를 이용<br>
+<br>
+
+- K-Fold 교차 검증 <br>
+<div style="text-align: center;">
+  <img src="./images/kfold.png" /> <br>
+</div>
+→ 모델이 테스트셋에 과적합 되었을 수 있으므로 K-Fold 교차 검증 진행<br>
+<br>
+
+- 특성 중요도
+ <br>
+<div style="text-align: center;">
+  <img src="./images/특징중요도.png" /> <br>
+</div>
+→ 랜덤포레스트 모델 분류에서 특징이 얼마나 영향을 미치는지 특징 중요도를 확인<br>
+→ user_credibility 변수가 분류에 가장 큰 영향을 주었고 다음으로 score 변수들의 영향이 큼<br>
+<br>
+</p>
+</details>
+
+<details><summary> <b> 텍스트 분석 </b> </summary>
+<p>
+	
+- 자연어 처리 분석 프레임워크
+<div style="text-align: center;">
+  <img src="./images/자연어분석.png" /> <br>
+</div>
+→ 텍스트 변수인 title과 text 병합한 뒤, 토큰화 및 불용어 제거 <br>
+→ 가짜 뉴스의 특성 중 "모호한 언어 사용"을 이용하기 위해 동사,형용사, 부사 토큰만을 추출하여 BoW, TF-IDF를 생성한 뒤 분석 수행
+<br>
+<br>
+
+- 모델 선택 및 분석
+  <br>
+<div style="text-align: center;">
+  <img src="./images/텍스트분석결과.png" /> <br>
+</div>
+→ MLP, 랜덤 포레스트. 로지스틱 회귀, 나이브 베이즈 분류 모델 이용 <br>
+→ 전체 토큰보다 동사, 형용사, 부사 토큰만으로 분석을 진행한 경우 성능이 더 높음
+<br>
+<br>
+
+- 하이퍼 파라미터 튜닝
+ <br>
+<div style="text-align: center;">
+  <img src="./images/하이퍼파라미터.png" /> <br>
+</div>
+→ 하이퍼 파라미터 튜닝 진행한 모든 모델의 성능이 향상<br>
+<br>
+  
+</p>
+</details>
+
+<details><summary> <b> 결과 </b> </summary>
+<p>
+	
+- 결과 비교
+<div style="text-align: center;">
+  <img src="./images/결과비교.png" /> <br>
+</div>
+→ 자연어처리: 동사, 형용사, 부사를 사용해 랜덤포레스트 모델을 이용했을때 가장 높은 성능
+
+→ 머신러닝: 랜덤포레스트 모델을 이용했을때 가장 높은 성능
+
+→ 자연어처리 보다 머신러닝이 더 높은 성능을 보이지만 자연어처리도 충분히 높은 성능을 보임
+<br>
+
+- 결론
+  <br>
+<div style="text-align: center;">
+  <img src="./images/결론.png" /> <br>
+</div>
+→ 가짜 뉴스의 서로 연결되지 않은 개인에 의한 전파 특성: 
+
+clustering coefficient의 비교로 나타냄 -> 기각
+
+→ 팔로워가 적은 사람에서 많은 사람으로 전파되는 양상: <br>
+in-out degree 비교로 나타냄 -> 기각
+
+→ 회피성 언어 사용 특성: <br>
+전체 텍스트 토큰 vs 동사, 형용사, 부사의 토큰만 이용한 자연어 처리 성능 비교를 통해 유의미한 결과 도출
+
+→ 진짜 뉴스와 가짜 뉴스의 빈도 수 차이를 통해 생성한 파생변수들 모두 유의미
+
+<br>
+
+- 고도화 방안
+  - 파생변수의 scoring 방식 개선 <br>
+  → 과거에 진짜 뉴스, 가짜 뉴스 둘 중 하나만 나타났을 때 횟수를 비교하지 못하는 한계 존재 <br>
+  ex. (진짜 뉴스 빈도수, 가짜 뉴스 빈도수) 라고 하면 (32,0)과 (9,0)이 같은 값 1로 scoring
+  - 자연어처리와 머신러닝을 함께 고려하여 분류하는 방법 탐색 <br>
+  → 두 방법을 따로 비교해야하는 한계 존재 <br>
+  → 앙상블과 같이 두 방법을 함께 고려하여 분류하는 방법을 탐색
+  - 네트워크에서 추가로 유의미한 인사이트 탐색 <br>
+  → 뉴스의 특성이 잘 나타나는 유저 간의 관계 데이터 필요 <br> 
+  → 뉴스의 확산 양상을 표현할 수 있는 보다 정교한 데이터 필요.
+
+  
+</p>
+</details>
