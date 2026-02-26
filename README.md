@@ -21,20 +21,13 @@ SNS의 발달로 정보 전파속도가 매우 빨라 가짜뉴스의 검증이 
 - 회피성 언어 사용 
     - Text(텍스트마이닝) 이용
 
-
-## 2. 프로젝트 일정
-
-<div style="text-align: center;">
-  <img src="./images/schedule.png" /> <br>
-</div>
-
-## 3. 분석 프레임워크
+## 2. 분석 프레임워크
 
 <div style="text-align: center;">
   <img src="./images/framework.png" /> <br>
 </div>
 
-## 4. 데이터 설명
+## 3. 데이터 설명
 txt : 트위터에서 공유되는 각종 뉴스 기사들의 retweet 데이터
 
 csv : 해당 기사의 진위여부 데이터
